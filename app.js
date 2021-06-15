@@ -144,8 +144,8 @@ function onLightBoxCloseClick(e) {
   lightBoxImage.setAttribute('src', ' ');
   lightBoxImage.setAttribute('alt', ' ');
 
-lightBoxOverlay.removeEventListener('click', onlightBoxOverlayClick);
-window.removeEventListener('keydown', onKeyEscPress);
+  lightBoxOverlay.removeEventListener('click', onlightBoxOverlayClick);
+  window.removeEventListener('keydown', onKeyEscPress);
 };
 
 function onlightBoxOverlayClick(e) {
