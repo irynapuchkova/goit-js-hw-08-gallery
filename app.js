@@ -64,11 +64,6 @@ const galleryItems = [
   },
 ];
 
-const galleryItemsEl = document.querySelector('.js-gallery');
-console.log(galleryItemsEl);
-
-const getGalleryItem = 
-
 {/* <li class="gallery__item">
   <a
     class="gallery__link"
@@ -82,3 +77,85 @@ const getGalleryItem =
     />
   </a>
 </li> */}
+
+const galleryItemsContainer = document.querySelector('.js-gallery');
+
+const lightBox = document.querySelector('.js-lightbox');
+const lightBoxOverlay = document.querySelector('.lightbox__overlay');
+const lightBoxImage = document.querySelector('.lightbox__image');
+const closeLightboxBtn = document.querySelector('[data-action="close-lightbox"]');
+
+const galleryItemsMarkup = createGalleryItemsMarkup;
+
+galleryItemsContainer.insertAdjacentHTML('beforeend', createGalleryItemsMarkup(galleryItems));
+
+galleryItemsContainer.addEventListener('click', onGalleryItemsContainerClick);
+
+closeLightboxBtn.addEventListener('click', onLightBoxCloseClick);
+
+function createGalleryItemsMarkup(items) {
+  return items.map(({ preview, original, description }) => {
+    return `<li class="gallery__item">
+      <a
+        class="gallery__link"
+        href="${original}"
+      >
+        <img
+          class="gallery__image"
+          src="${preview}"
+          data-source="${original}"
+          alt="${description}"
+        />
+      </a>
+    </li>`;
+  }).join(' ');
+} 
+
+function onGalleryItemsContainerClick(e) {
+  e.preventDefault();
+  const target = e.target;
+  
+  if (target.nodeName !== 'IMG') {
+    return;
+  }
+
+  console.log(target.dataset.source);
+  console.log(target.alt);
+
+  onLightBoxOpen(e);
+}
+
+function onLightBoxOpen(e) {
+  lightBox.classList.add('is-open');
+
+  const imageAttribute = e.target.dataset.source;
+  const imageAlt = e.target.alt;
+
+  const lightBoxImageSource = lightBoxImage.setAttribute('src', imageAttribute);
+  const lightBoxImageAlt = lightBoxImage.setAttribute('alt', imageAlt);
+
+  lightBoxOverlay.addEventListener('click', onlightBoxOverlayClick);
+  window.addEventListener('keydown', onKeyEscPress);
+}
+
+function onLightBoxCloseClick(e) {
+  lightBox.classList.remove('is-open');
+
+  lightBoxImage.setAttribute('src', ' ');
+  lightBoxImage.setAttribute('alt', ' ');
+
+lightBoxOverlay.removeEventListener('click', onlightBoxOverlayClick);
+window.removeEventListener('keydown', onKeyEscPress);
+};
+
+function onlightBoxOverlayClick(e) {
+  if (e.currentTarget === e.target) {
+    onLightBoxCloseClick();
+  }
+}
+
+function onKeyEscPress(e) {
+  if (e.code === 'Escape') {
+     onLightBoxCloseClick();
+  }
+}
